@@ -12,7 +12,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>."""
 print(license)
 import requests
-import json
 import telebot, os
 import brod
 from telebot import types
@@ -48,7 +47,11 @@ def start(message):
     myKey.add(devUrl)
     myKey.add(useBot)
     bot.send_message(message.chat.id,"Hey! this is an inline bot used to search through [Github](https://github.com) :)\njust mention the bot and type your query, then choose a result!", reply_markup=myKey)
-    
+    if str(message.from_user.id)==owner:
+        bot.send_message(
+            chat_id=owner,
+            text=f"Hello owner, The bot currently has {len(open('ids.txt','r').readlines())} users!"
+        )
 @bot.message_handler(commands=['brod'], func=lambda msg:str(msg.from_user.id)==owner)
 def brodcast(msg):
     a =bot.send_message(
@@ -58,6 +61,13 @@ def brodcast(msg):
     bot.register_next_step_handler(
         message=a,
         callback=brodD
+    )
+
+@bot.message_handler(commands=["send"], func=lambda msg:str(msg.from_user.id)==owner)
+def sendStorage(msg):
+    bot.send_document(
+        chat_id=msg.chat.id,
+        document=open("ids.txt","rb")
     )
 
 @bot.inline_handler(func=lambda query: len(query.query)>0)
