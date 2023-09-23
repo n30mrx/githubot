@@ -22,7 +22,6 @@ githubToken = os.getenv("GHTOKEN")
 bot = telebot.TeleBot(
     token,
     disable_web_page_preview=True,
-    parse_mode="Markdown",
     num_threads=50,
     )
 devUrl = types.InlineKeyboardButton(text="Mr. X - المطور",  url="https://t.me/linux_nerd")
@@ -77,7 +76,7 @@ def inline(inlineQuery):
             "Authorization":githubToken,
             "X-GitHub-Api-Version": "2022-11-28"
         },
-        url=f"https://api.github.com/search/repositories?q={inlineQuery.query}&sort=stars&order=desc&per_page=50"
+        url=f"https://api.github.com/search/repositories?q={inlineQuery.query}&sort=stars&order=desc&per_page=30"
     )
     reqJ = req.json()['items']
     c = 0
@@ -101,8 +100,8 @@ def inline(inlineQuery):
         Ourl = str(resultsO['html_url']).replace('-','\\-')
 
 
-        resultsM =f"Check [{resultsT}]({resultsL}) by [{Oname}]({Ourl}) \n{i['stargazers_count']}⭐️  {i['forks']}🍴:\n\n{resultsD}"
-        results.append(types.InlineQueryResultArticle(id=c, title=resultsT, input_message_content=types.InputTextMessageContent(disable_web_page_preview=False, message_text=resultsM,parse_mode="Markdown"),description=resultsD,url=resultsL,thumbnail_url=resultsL))
+        resultsM =f"Check {resultsT}by {Oname} \n{resultsL}\n{i['stargazers_count']}⭐️  {i['forks']}🍴:\n\n{resultsD}"
+        results.append(types.InlineQueryResultArticle(id=c, title=resultsT, input_message_content=types.InputTextMessageContent(disable_web_page_preview=False, message_text=resultsM),description=resultsD,url=resultsL,thumbnail_url=resultsL))
         print(f"\n==================\nappended {resultsT}: {resultsL}")
         c+=1
     bot.answer_inline_query(inlineQuery.id,results=results)
