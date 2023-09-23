@@ -78,6 +78,11 @@ def inline(inlineQuery):
         },
         url=f"https://api.github.com/search/repositories?q={inlineQuery.query}&sort=stars&order=desc&per_page=30"
     )
+    print(f"""==================================================
+{req.status_code}
+
+{req.text}
+==================================================""")
     reqJ = req.json()['items']
     c = 0
     results = []
